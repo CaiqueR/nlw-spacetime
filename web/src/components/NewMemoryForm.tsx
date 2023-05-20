@@ -2,15 +2,17 @@
 
 import { Camera } from 'lucide-react'
 import { MediaPicker } from './MediaPicker'
-import { FormEvent } from 'react'
+import { FormEvent, useState } from 'react'
 import { api } from '@/lib/api'
 import Cookie from 'js-cookie'
 import { useRouter } from 'next/navigation'
 
 export function NewMemoryForm() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
 
   async function handleCreateMemory(event: FormEvent<HTMLFormElement>) {
+    setLoading(true)
     event.preventDefault()
 
     const formData = new FormData(event.currentTarget)
@@ -44,6 +46,7 @@ export function NewMemoryForm() {
       },
     )
 
+    setLoading(false)
     router.push('/')
   }
 
@@ -85,8 +88,9 @@ export function NewMemoryForm() {
       <button
         type="submit"
         className="inline-block self-end rounded-full bg-green-500 px-5 py-3 font-alt text-sm uppercase leading-none text-black hover:bg-green-600"
+        disabled={loading}
       >
-        Salvar
+        {loading ? 'Salvando...' : 'Salvar'}
       </button>
     </form>
   )
